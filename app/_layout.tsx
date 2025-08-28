@@ -57,12 +57,30 @@ function RootLayoutNav() {
         {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
         <Stack.Screen 
           name="index"
-          options={{
-            headerTransparent: false,
-            headerTitle: "",
-            headerTintColor: "#000",
-            headerLeft: HeaderLeft,        
-          }}/>
+          // options={{
+          //   headerTransparent: true,
+          //   headerTitle: "Segunda Via 2",
+          //   headerTitleStyle: {
+          //     color: "#FFF",       // ← title text color
+          //     fontWeight: "bold",
+          //     fontFamily: "OpenSans",
+          //     fontSize: 20,
+          //   },
+          //   headerLeft: HeaderLeft,    
+
+          // }}
+  options={{
+    headerTransparent: true,
+    headerTitle: "Segunda Via",  // ← força o uso do style
+    headerTitleStyle: {
+      fontFamily: "OpenSans",
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: "#FFF",
+    },
+    headerLeft: HeaderLeft,        
+  }}
+/>
       </Stack>
         
       <FlashMessage position="top" /> 

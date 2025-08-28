@@ -51,7 +51,8 @@ const styles = StyleSheet.create({
         // alignSelf: 'stretch',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 15,
+        padding:8,
+        // paddingVertical: 10,
         borderRadius: 4,
         margin: 10,
         elevation: 2,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: 'OpenSans',
         color: "#fff",
-        fontSize: 14,
+        // fontSize: 14,
         textTransform: 'uppercase',
         fontWeight: "bold"
         

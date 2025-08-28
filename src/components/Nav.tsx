@@ -10,7 +10,7 @@ export const HeaderLeft = () => {
     // const navigation = useNavigation()
   return (
     <TouchableOpacity style={styles.roundIconContainer} onPress={()=> router.back()}>
-        <Ionicons name="arrow-back" size={24} color={Colors.primary}/>  
+        <Ionicons name="arrow-back" size={24} color={"#fff"}/>  
     </TouchableOpacity>
   )
 }
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     height:40,
     borderRadius: 20,
     marginHorizontal: 5,
-    backgroundColor: Colors.light_grey,
+    // backgroundColor: Colors.light_grey,
     alignItems: 'center',
     justifyContent: 'center'
   },
