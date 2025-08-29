@@ -9,6 +9,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/components/useColorScheme';
 import CustomHeader from '@/src/components/Header';
 import { HeaderLeft, HeaderRight } from '@/src/components/Nav';
+import { View } from 'react-native';
 
 export {
   ErrorBoundary,
@@ -44,10 +45,12 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  // const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <>
+      
       <Stack initialRouteName='home'>
         <Stack.Screen name="home" options={{ 
           // headerShown: false 
@@ -56,7 +59,7 @@ function RootLayoutNav() {
           }} />
         {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
         <Stack.Screen 
-          name="index"
+          name="segunda_via"
           // options={{
           //   headerTransparent: true,
           //   headerTitle: "Segunda Via 2",
@@ -83,7 +86,9 @@ function RootLayoutNav() {
 />
       </Stack>
         
-      <FlashMessage position="top" /> 
-    </ThemeProvider>
+      <FlashMessage position="top" />
+  </>
+     
+    // </ThemeProvider>
   );
 }

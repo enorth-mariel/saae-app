@@ -48,13 +48,13 @@ const CustomHeader = () => {
         <TouchableOpacity>
           <Image style={styles.logo} source={require("@/assets/images/logo.png")}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.titleContainer} onPress={openBottomModal}>
+        {/* <TouchableOpacity style={styles.titleContainer} onPress={openBottomModal}>
           <Text style={styles.title}>SAAE</Text>
           <View style={styles.locationContainer}>
             <Text style={styles.subtitle}>Selecionar localização</Text>
             <Ionicons name='chevron-down-outline' size={20} color={Colors.primary}/>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
 
         {/* <TouchableOpacity onPress={()=>{}} style={styles.profileContainer}>
@@ -71,22 +71,26 @@ const CustomHeader = () => {
 const styles = StyleSheet.create({
   safeArea: {
     // flex:1,
-    backgroundColor: "#fff"
+    backgroundColor: Colors.white_txt,
+    // flex:1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', 
+    
+    paddingHorizontal:20,
   },
-
+  
   logo: {
     height:50,
     width:50
   },
-
+  
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between', 
-    gap: 20,
-    height:60,
-    backgroundColor: '#fff',
-    paddingHorizontal:20
+    flex:1,
+
+    // gap: 20,
+    // backgroundColor: 'red',
+    // height:60,
   },
 
   titleContainer: {
