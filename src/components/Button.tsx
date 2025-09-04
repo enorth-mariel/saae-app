@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: 'OpenSans',
         color: "#fff",
-        fontSize: 10,
+        fontSize: 15,
         textTransform: 'uppercase',
         fontWeight: "bold"
         

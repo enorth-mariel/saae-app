@@ -6,7 +6,7 @@ import Colors from '@/constants/Colors';
 import * as Clipboard from "expo-clipboard";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { showMessage } from "react-native-flash-message";
-import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, Keyboard, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 
 
@@ -43,6 +43,7 @@ export const SegundaViaForm: React.FC = () => {
 
                     setContas(data)  
                     setDataLoaded(true)
+                    Keyboard.dismiss()
 
                     showMessage({
                         message: "Carregado com sucesso!",

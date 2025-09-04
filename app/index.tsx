@@ -1,80 +1,77 @@
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, SafeAreaView } from 'react-native'
+import { View, Text, Image, TouchableOpacity,StyleSheet } from 'react-native'
 import React from 'react'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Colors from '@/constants/Colors'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Button from '@/src/components/Button'
+import { Link, useRouter } from 'expo-router'
 
-import { Link } from 'expo-router';
-import Button from '@/src/components/Button';
-import Colors from '@/constants/Colors';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+const index = () => {
+    const router = useRouter()
 
-const Home = () => {
+    
+    const goHome = ()=>{
+        router.replace('/');
+    }
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.top_container}>
+                <Image style={styles.img} resizeMode="contain"
+                    source={require("../assets/images/logo_colorida.png")}/>
+            </View>
 
-  return (
-    <View style={styles.container}>
-        <Text style={styles.text}>Menu</Text>
 
-            <Link href={'/segunda_via'} asChild>
-        <TouchableOpacity>
-
-
-            <ImageBackground style={styles.button} 
-            source={require("../assets/images/bg1.jpg")} 
-            resizeMode="cover"
-            imageStyle={{ borderRadius: 12 }}>
-
-                    <View style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>      
-                        <MaterialCommunityIcons name="file-document" size={25} color={Colors.white_txt} style={{padding:5}}/>
-                        <Text style={styles.buttonText}>Segunda Via</Text>
-                    </View>
-            </ImageBackground>
-            </TouchableOpacity>
-        </Link>          
-
-        {/* <ImageBackground style={styles.button} 
-        source={require("../assets/images/bg1.jpg")} 
-        resizeMode="cover"
-        imageStyle={{ borderRadius: 12 }}
         
-        >
-            <Link href={'/pdf'} asChild>
-              <TouchableOpacity style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>
-                  <MaterialIcons name="water-damage" size={25} color={Colors.white_txt} style={{padding:5}}/>            
-                  <Text style={styles.buttonText}>PDF</Text>
-              </TouchableOpacity>
-              </Link>          
-          </ImageBackground> */}
-    </View>
-  )
-}
 
+            <View style={styles.bottom_container}>
+
+                    <View style={{alignItems: 'center', justifyContent:'center'}}>
+
+                        {/* <Text style={[styles.text, {fontSize: 35}]}>Bem Vindo!</Text> */}
+                        {/* 
+                        <Text style={styles.text}>SAAE há 57 anos</Text>
+                        <Text style={styles.text}>Presente no futuro da gente</Text>
+                         */}
+                    </View>
+
+                    <View style={{height: 65}}>
+                        {/* <Link href={'/'}> */}
+                            <Button type='primary' text='Iniciar' fullWidth={true} onPress={goHome}/>
+                        {/* </Link> */}
+
+                    </View>
+            </View>
+
+    </SafeAreaView>
+    )
+}
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        padding:10,
-        paddingTop: 15,
-        backgroundColor: Colors.grey_bg 
+        padding:15,
+        alignItems: "center", 
+        justifyContent:"space-around", 
+        backgroundColor: Colors.white_txt,
     },
-    button: {
-        height: 75, 
-        backgroundColor: "#fff", 
-        margin:10, 
-        borderRadius:10,
-        padding:10,
+    top_container: {
+        width: 400, 
+        height: 300,
     },
-    buttonText: {
-        marginHorizontal: 5,
-        color: "#fff",
-        fontSize: 18,
+    bottom_container:{
+        flex:1, 
+        width: "100%",
+        justifyContent: "space-around", 
+    },
+    text:{
+        color: Colors.primary,
         fontFamily: "OpenSans",
-        fontWeight:"bold",
+        marginTop: 8, 
+        marginLeft: 10,
+        fontSize: 20, 
     },
-    text: {
-        fontSize: 18,
-        marginHorizontal: 25,
-        fontFamily: "OpenSans",
-        fontWeight:"bold",
-        color: Colors.grey_txt
+    img: {
+        width: "100%",
+        height: "100%",
     },
 })
 
-export default Home
+export default index

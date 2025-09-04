@@ -22,7 +22,7 @@ export const HeaderRight = () => {
     return (
 // <View style={styles.rightContainer}>
             // <ion-icon name="camera-outline"></ion-icon>]
-              <Link href={'/'} asChild>
+              <Link href={'/home'} asChild>
                       
                 <TouchableOpacity style={styles.roundIconContainer}>
                   <Feather name="download" size={24} color={Colors.secondary} />

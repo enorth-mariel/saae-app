@@ -38,12 +38,12 @@ export default function RootLayout() {
 
 	useEffect(() => {
 		if (loaded) {
-			// SplashScreen.hideAsync();
+			SplashScreen.hideAsync();
 		}
 	}, [ loaded ]);
 
-	if (loaded) {
-		// return <LoadingPage/>;
+	if (!loaded) {
+		return ;
 	}
 
   	return <RootLayoutNav />;
@@ -55,10 +55,13 @@ function RootLayoutNav() {
 
 	return (<>
 		<Stack initialRouteName="index">
-			<Stack.Screen name="index" options={{ 
+			<Stack.Screen name="home" options={{ 
 				header: () => <CustomHeader/>
 			}} />
 			
+			<Stack.Screen name="index" options={{
+				headerShown:false
+			}} />
 
 			<Stack.Screen
 				name="segunda_via"     
