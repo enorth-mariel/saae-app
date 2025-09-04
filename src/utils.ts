@@ -1,5 +1,6 @@
 import { showMessage } from "react-native-flash-message";
-
+// import AntDesign from '@expo/vector-icons/AntDesign';
+import { ReactElement } from "react";
 
 export const BASE_API = "https://saae-back.e-north.com.br/api/"
 export const BASE_PROXY = "https://saae.e-north.com.br/gsan/"
@@ -63,3 +64,12 @@ export const ErrorMessage = (message:string, description:string, type:"warning" 
         },    
     });
 }
+
+import {AntDesign} from '@expo/vector-icons';
+
+export interface Menu {
+  title: string;
+  link?: string;
+  icon: ReactElement 
+}
+

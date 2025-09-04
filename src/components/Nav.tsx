@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { Link, useNavigation, useRouter } from 'expo-router'
 import Colors from '@/constants/Colors'
 import Feather from '@expo/vector-icons/Feather';
+import { ErrorMessage } from '../utils'
 
 
 export const HeaderLeft = () => {
@@ -22,17 +23,13 @@ export const HeaderRight = () => {
     return (
 // <View style={styles.rightContainer}>
             // <ion-icon name="camera-outline"></ion-icon>]
-              <Link href={'/home'} asChild>
+              // <Link href={'/home'} asChild>
                       
-                <TouchableOpacity style={styles.roundIconContainer}>
+                <TouchableOpacity style={styles.roundIconContainer} onPress={()=>ErrorMessage("Não implementado", "", 'danger')}>
                   <Feather name="download" size={24} color={Colors.secondary} />
                   {/* <Ionicons name="camera-outline" size={24} color={Colors.secondary}  /> */}
                 </TouchableOpacity>
-              {/* // <TouchableOpacity style={styles.roundIconContainer} onPress={()=> navigation.goBack()}>
-              //   <Ionicons name="trash-outline" size={24} color={Colors.primary}/>
-              // </TouchableOpacity>          
-            // </View> */}
-              </Link>
+              // </Link>
 
     )
 }

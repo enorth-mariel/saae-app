@@ -1,16 +1,17 @@
 // import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
   import FlashMessage from "react-native-flash-message";
-import { useColorScheme } from '@/components/useColorScheme';
+// import { useColorScheme } from '@/components/useColorScheme';
 import CustomHeader from '@/src/components/Header';
-import { HeaderLeft, HeaderRight } from '@/src/components/Nav';
+import { HeaderRight } from '@/src/components/Nav';
 import Colors from '@/constants/Colors';
-import LoadingPage from '@/src/components/LoadingPage';
+import { TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 export {
   	ErrorBoundary,
@@ -54,53 +55,87 @@ function RootLayoutNav() {
 	// <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 
 	return (<>
+	
+    <BottomSheetModalProvider>
+
 		<Stack initialRouteName="index">
-			<Stack.Screen name="home" options={{ 
-				header: () => <CustomHeader/>
-			}} />
 			
 			<Stack.Screen name="index" options={{
 				headerShown:false
 			}} />
 
+			<Stack.Screen name="home" options={{ 
+				header: () => <CustomHeader/>
+			}} />
+			
+			<Stack.Screen name="(modal)/menu" 
+				
+				options={{
+					headerStyle: {
+						backgroundColor: Colors.default,
+					},
+					headerTransparent: true,
+					headerTintColor: "#FFF",
+					headerTitle: "Menu",
+					headerTitleStyle: {
+						fontFamily: "OpenSans",
+						fontSize: 18,
+						fontWeight: 'bold',
+						color: "#FFF",
+					},
+
+					presentation: 'modal',
+					// headerShadowVisible:false,
+				// headerLeft: ()=>(
+				// 	<TouchableOpacity onPress={()=>{router.back()}} style={{marginRight:10}}>
+				// 	<Ionicons name='close-outline' size={28} color={Colors.white_txt}/>
+				// 	</TouchableOpacity>
+				// )
+				}}/>
+				
+			
+
 			<Stack.Screen
 				name="segunda_via"     
 				options={{
-				headerStyle: {
-					backgroundColor: Colors.default,
-				},
-				headerTransparent: true,
-				headerTintColor: "#FFF",
-				headerTitle: "Segunda via",
-				headerTitleStyle: {
-					fontFamily: "OpenSans",
-					fontSize: 18,
-					fontWeight: 'bold',
-					color: "#FFF",
-				},
-				// headerLeft: HeaderLeft,        
+					headerStyle: {
+						backgroundColor: Colors.default,
+					},
+					headerTransparent: true,
+					headerTintColor: "#FFF",
+					headerTitle: "Segunda via",
+					headerTitleStyle: {
+						fontFamily: "OpenSans",
+						fontSize: 18,
+						fontWeight: 'bold',
+						color: "#FFF",
+					},
+					// headerLeft: HeaderLeft,        
 			}}/>
 
 			<Stack.Screen 
 			name="pdf"
 			options={{
 				headerStyle: {
-				backgroundColor: Colors.default,
+					backgroundColor: Colors.default,
 				},
 				headerTransparent: true,
-			headerTintColor: "#FFF",
-			headerTitle: "Visualizador de PDF",
-			headerTitleStyle: {
-				fontFamily: "OpenSans",
+				headerTintColor: "#FFF",
+				headerTitle: "Visualizador de PDF",
+				headerTitleStyle: {
+					fontFamily: "OpenSans",
 				fontSize: 18,
 				fontWeight: 'bold',
 				color: "#FFF",
 			},
 			headerRight: HeaderRight,        
 			}}/>
+
+
 		</Stack>
 			
 		<FlashMessage position="top" />   
+	</BottomSheetModalProvider>
 	</>
 	);
 }

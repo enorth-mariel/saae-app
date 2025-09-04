@@ -6,7 +6,7 @@ import { Link } from 'expo-router';
 import Colors from '@/constants/Colors';
 import * as Clipboard from "expo-clipboard";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Text, View, Keyboard, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, Keyboard, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { BASE_API, Conta, ErrorMessage, is_numeric, LOCAL_BASE_API, SEGUNDA_VIA_BARCODE, SEGUNDA_VIA_CONTAS, SuccessMessage } from '../utils'
 
 
@@ -15,11 +15,14 @@ export const SegundaViaForm: React.FC = () => {
     const [ contas, setContas ] = React.useState<Conta[]>();
     const [ isDataLoaded, setDataLoaded ] = React.useState(false)
     const [ matricula, onMatriculaChange ] = React.useState<string>("") 
+    const [ loading, onLoading ] = React.useState<boolean>(false)
     
 
     const getContasAbertas = async () => {
 
         if ( matricula && is_numeric(matricula) ){
+            onLoading(true)
+            setDataLoaded(false)
 
             axios.get(`${BASE_API}${SEGUNDA_VIA_CONTAS}${matricula}/`)
                 .then(function(response){
@@ -28,12 +31,15 @@ export const SegundaViaForm: React.FC = () => {
 
                     setContas(data)  
                     setDataLoaded(true)
+                    onLoading(false)
+
                     Keyboard.dismiss()
 
-                    SuccessMessage("Carregado com sucesso!")
+                    SuccessMessage("Faturas carregadas")
                 })
                 .catch(function(error){
                     setDataLoaded(false)
+                    onLoading(false)
 
                     ErrorMessage(
                         "Não encontrado",
@@ -44,6 +50,7 @@ export const SegundaViaForm: React.FC = () => {
         }
         else {
             setDataLoaded(false)
+            onLoading(false)
 
             ErrorMessage(
                 "Matrícula não válida",
@@ -64,6 +71,13 @@ export const SegundaViaForm: React.FC = () => {
                     <Button type='primary' text='Buscar' onPress={getContasAbertas}/>
                 </View>
             </View>
+
+            {
+                loading &&
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <ActivityIndicator size="large" color="#007AFF" />
+                </View>
+            }
 
             <View style={{ marginTop: 50}}>
                 {isDataLoaded && 
@@ -151,7 +165,7 @@ return (
                 ()=>getBarCode(matricula, item.idConta)}/>
 
                 {/* ()=> copyBarCodeToClipboard()} */}
-            <Button type='default' text='PIX' fullWidth={ true } onPress={ ()=>console.log("TODO") } />
+            <Button type='default' text='PIX' fullWidth={ true } onPress={ ()=>ErrorMessage("Não implementado", "", 'danger') } />
         </View>
     </>
 );}

@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
 import { Link, useNavigation } from 'expo-router'
-
+import Feather from '@expo/vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 // import CustomBottomSheet from './BottomSheet'
 // import { BottomSheetModal } from '@gorhom/bottom-sheet'
@@ -13,21 +13,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 const SearchBar = () => (
   <View style={styles.searchContainer}>
-    <View style={styles.searchContent}>
-      <View style={styles.searchField}>
-        <Ionicons style={styles.searchIcon} name='search-outline' size={20} color={Colors.medium_grey}/>
-        <TextInput style={styles.searchInput} placeholder="Pesquisar" placeholderTextColor={Colors.medium_grey}>
 
-        </TextInput>
-
-      </View>
-
-      {/* <Link href={'/(modal)/filter'} asChild>
-        <TouchableOpacity style={styles.optionButton}>
-          <Ionicons name='options-outline' size={20} color={Colors.primary}/>
-        </TouchableOpacity>
-      </Link> */}
-    </View>
+      <Link href={'/(modal)/menu'} asChild>
+      <TouchableOpacity style={styles.optionButton}>
+          <Feather name="menu" size={24} color="black" />
+      </TouchableOpacity>
+</Link>
 
   </View>
 )
@@ -51,11 +42,13 @@ const CustomHeader = () => {
       {/* <CustomBottomSheet ref={bottomSheetRef}/> */}
 
         <View style={styles.container}>
-          <TouchableOpacity>
-            <Image style={styles.logo} source={require("@/assets/images/logo.png")}/>
-          </TouchableOpacity>
-          {/* <MaterialIcons name="water-damage" size={25} color={"#3970d4ff"} style={{padding:5}}/>       */}
-          {/* <TouchableOpacity style={styles.titleContainer} onPress={openBottomModal}>
+          <Link href={"/(modal)/menu"}>
+            <TouchableOpacity>
+              <Image style={styles.logo} source={require("@/assets/images/logo.png")}/>
+            </TouchableOpacity>
+          </Link>
+          {/* <MaterialIcons name="water-damage" size={25} color={"#3970d4ff"} style={{padding:5}}/>
+            <TouchableOpacity style={styles.titleContainer} onPress={openBottomModal}>
             <Text style={styles.title}>SAAE</Text>
             <View style={styles.locationContainer}>
               <Text style={styles.subtitle}>Selecionar localização</Text>
@@ -70,7 +63,7 @@ const CustomHeader = () => {
           </TouchableOpacity> */}
           
         </View>
-      {/* <SearchBar/> */}
+        <SearchBar/>
       </View>
     </>
   )
@@ -129,13 +122,15 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    height: 60,
-    backgroundColor: "#fff"
+    // height: 60,
+    // backgroundColor: Colors.info
   },
 
   searchContent: {
+    backgroundColor: Colors.success,
     flexDirection:'row',
-    gap: 10,
+    // gap: 10,
+    flex:1,
     paddingHorizontal:20,
     alignItems: 'center'
   },

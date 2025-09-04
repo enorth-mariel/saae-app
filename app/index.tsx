@@ -33,9 +33,9 @@ const index = () => {
                          */}
                     </View>
 
-                    <View style={{height: 65}}>
+                    <View style={{height: 65, }}>
                         {/* <Link href={'/'}> */}
-                            <Button type='primary' text='Iniciar' fullWidth={true} onPress={goHome}/>
+                            <Button type='primary' text='Entrar' fullWidth={true} onPress={goHome}/>
                         {/* </Link> */}
 
                     </View>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     bottom_container:{
         flex:1, 
         width: "100%",
-        justifyContent: "space-around", 
+        justifyContent: "flex-end", 
     },
     text:{
         color: Colors.primary,
