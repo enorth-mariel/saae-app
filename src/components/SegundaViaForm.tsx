@@ -2,29 +2,14 @@ import axios from 'axios';
 import React from 'react';
 import Button from './Button';
 import { Input } from './Input';
+import { Link } from 'expo-router';
 import Colors from '@/constants/Colors';
 import * as Clipboard from "expo-clipboard";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { showMessage } from "react-native-flash-message";
 import { Text, View, Keyboard, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { BASE_API, Conta, ErrorMessage, is_numeric, LOCAL_BASE_API, SEGUNDA_VIA_BARCODE, SEGUNDA_VIA_CONTAS, SuccessMessage } from '../utils'
 
 
-
-const BASE_API = "https://saae-back.e-north.com.br/api/"
-const SEGUNDA_VIA_CONTAS = "gsan/fatura_matricula/"
-const LOCAL_BASE_API = "http://10.0.2.2:8080/api/"
-const SEGUNDA_VIA_BARCODE = "gsan/segunda_via/codigo_barras"
-
-interface Conta {
-    data: string,
-    valor: string,
-    idConta: string
-}
-
-function is_numeric(str:string){
-    return /^\d+$/.test(str);
-}
 
 export const SegundaViaForm: React.FC = () => {
     const [ contas, setContas ] = React.useState<Conta[]>();
@@ -45,32 +30,26 @@ export const SegundaViaForm: React.FC = () => {
                     setDataLoaded(true)
                     Keyboard.dismiss()
 
-                    showMessage({
-                        message: "Carregado com sucesso!",
-                        type: "success",
-                    });
-
+                    SuccessMessage("Carregado com sucesso!")
                 })
                 .catch(function(error){
                     setDataLoaded(false)
 
-                    showMessage({
-                        message: "Não encontrado",
-                        description: "Não há faturas em aberto da matrícula digitada.",
-                        duration: 5000,
-                        type: "warning",
-                    });
+                    ErrorMessage(
+                        "Não encontrado",
+                        "Não há faturas em aberto da matrícula digitada.",
+                        "danger"
+                    )
                 })
         }
         else {
             setDataLoaded(false)
 
-            showMessage({
-                message: "Matrícula não válida",
-                description: "Digite uma matrícula válida.",
-                duration: 5000,
-                type: "danger",
-            });
+            ErrorMessage(
+                "Matrícula não válida",
+                "Digite uma matrícula válida.",
+                "warning"
+            )
         }        
     };
 
@@ -121,23 +100,31 @@ const Item = ({ item, matricula }: ItemProps) => {
             setBarCode(response.data.data)
             copyBarCodeToClipboard()
 
-        }).catch(function(e){
-            showMessage({
-                message: "Não foi possível copiar código de barras.",
-                duration: 5000,
-                type: "warning",
-            });  
+        }).catch(function(error){
+            if (error.response) {
+                ErrorMessage(
+                    "Não foi possível copiar código de barras.",
+                    `Erro ${error.response.status}`,
+                    "danger"
+                )
+            } else if (error.request) {
+                ErrorMessage(
+                    "Não foi possível copiar código de barras.",
+                    `Nenhuma resposta: ${error.request}`,
+                    "danger"
+                )
+            } else {
+                ErrorMessage(
+                    "Não foi possível copiar código de barras.",
+                    `${error.message}`,
+                    "danger"
+                )
+            }
         })
     }
 
     const copyBarCodeToClipboard = async () => {
-        await Clipboard.setStringAsync(barCode);
-
-        // showMessage({
-        //     message: "Código de barras copiado com sucesso",
-        //     duration: 5000,
-        //     type: 'success',
-        // });  
+        await Clipboard.setStringAsync(barCode); 
     };
 
 return (
@@ -161,8 +148,8 @@ return (
 
         <View style={ styles.item_btn_container }>
             <Button type='info' text='Código de barras' fullWidth={ true } onPress={
-                ()=>getBarCode(matricula, item.idConta)}
-                />
+                ()=>getBarCode(matricula, item.idConta)}/>
+
                 {/* ()=> copyBarCodeToClipboard()} */}
             <Button type='default' text='PIX' fullWidth={ true } onPress={ ()=>console.log("TODO") } />
         </View>
@@ -175,12 +162,8 @@ const ItemSeparator = () => {
 
 const styles = StyleSheet.create({
     container: {
-        // justifyContent:'',
-        // alignItems:'center',
-        // margin: 15,
         backgroundColor: Colors.grey_bg,
         flexDirection:'column',
-        // borderRadius: 6,
         paddingTop: 30,
         marginTop: 85,
         padding: 10,
@@ -190,7 +173,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     header_text: {
-        // fontSize: 25,
         textTransform: 'uppercase',
         fontFamily: "OpenSans",
         color: "#8898AA",

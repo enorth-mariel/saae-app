@@ -10,7 +10,7 @@ const index = () => {
 
     
     const goHome = ()=>{
-        router.replace('/');
+        router.replace('/home');
     }
     return (
         <SafeAreaView style={styles.container}>
