@@ -1,5 +1,4 @@
 import React from 'react';
-import Pdf from 'react-native-pdf';
 import { StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SegundaViaForm } from '@/src/components/SegundaViaForm';

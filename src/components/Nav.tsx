@@ -1,8 +1,10 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
-import { Colors } from 'react-native/Libraries/NewAppScreen'
+// import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { Link, useNavigation, useRouter } from 'expo-router'
+import Colors from '@/constants/Colors'
+import Feather from '@expo/vector-icons/Feather';
 
 
 export const HeaderLeft = () => {
@@ -20,10 +22,11 @@ export const HeaderRight = () => {
     return (
 // <View style={styles.rightContainer}>
             // <ion-icon name="camera-outline"></ion-icon>]
-              <Link href={'/home'} asChild>
+              <Link href={'/'} asChild>
                       
                 <TouchableOpacity style={styles.roundIconContainer}>
-                  <Ionicons name="camera-outline" size={24} color={Colors.primary}/>
+                  <Feather name="download" size={24} color={Colors.secondary} />
+                  {/* <Ionicons name="camera-outline" size={24} color={Colors.secondary}  /> */}
                 </TouchableOpacity>
               {/* // <TouchableOpacity style={styles.roundIconContainer} onPress={()=> navigation.goBack()}>
               //   <Ionicons name="trash-outline" size={24} color={Colors.primary}/>

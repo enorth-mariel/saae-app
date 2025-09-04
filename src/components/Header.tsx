@@ -3,6 +3,8 @@ import React, { useRef } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
 import { Link, useNavigation } from 'expo-router'
+
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 // import CustomBottomSheet from './BottomSheet'
 // import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -41,42 +43,47 @@ const CustomHeader = () => {
   }
   
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <>
+    <SafeAreaView style={{backgroundColor: Colors.default, }}/>
+    
+      <View style={styles.safeArea}>
+        
       {/* <CustomBottomSheet ref={bottomSheetRef}/> */}
 
-      <View style={styles.container}>
-        <TouchableOpacity>
-          <Image style={styles.logo} source={require("@/assets/images/logo.png")}/>
-        </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.titleContainer} onPress={openBottomModal}>
-          <Text style={styles.title}>SAAE</Text>
-          <View style={styles.locationContainer}>
-            <Text style={styles.subtitle}>Selecionar localização</Text>
-            <Ionicons name='chevron-down-outline' size={20} color={Colors.primary}/>
-          </View>
-        </TouchableOpacity> */}
+        <View style={styles.container}>
+          <TouchableOpacity>
+            <Image style={styles.logo} source={require("@/assets/images/logo.png")}/>
+          </TouchableOpacity>
+          {/* <MaterialIcons name="water-damage" size={25} color={"#3970d4ff"} style={{padding:5}}/>       */}
+          {/* <TouchableOpacity style={styles.titleContainer} onPress={openBottomModal}>
+            <Text style={styles.title}>SAAE</Text>
+            <View style={styles.locationContainer}>
+              <Text style={styles.subtitle}>Selecionar localização</Text>
+              <Ionicons name='chevron-down-outline' size={20} color={Colors.primary}/>
+            </View>
+          </TouchableOpacity> */}
 
 
-        {/* <TouchableOpacity onPress={()=>{}} style={styles.profileContainer}>
-          <Ionicons name='person-outline' size={20} color={Colors.primary}/>
+          {/* <TouchableOpacity onPress={()=>{}} style={styles.profileContainer}>
+            <Ionicons name='person-outline' size={20} color={Colors.primary}/>
+            
+          </TouchableOpacity> */}
           
-        </TouchableOpacity> */}
-        
-      </View>
+        </View>
       {/* <SearchBar/> */}
-      </SafeAreaView>
+      </View>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
   safeArea: {
-    // flex:1,
-    backgroundColor: Colors.white_txt,
-    // flex:1,
+    backgroundColor: "#fff",
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between', 
-    
+    height:60,
+    padding:0,
     paddingHorizontal:20,
   },
   
@@ -87,7 +94,10 @@ const styles = StyleSheet.create({
   
   container: {
     flex:1,
+    flexDirection: 'row',
+    alignItems: 'center'
 
+    // flexDirection: 'column'
     // gap: 20,
     // backgroundColor: 'red',
     // height:60,

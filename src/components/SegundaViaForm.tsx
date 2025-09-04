@@ -7,6 +7,7 @@ import * as Clipboard from "expo-clipboard";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { showMessage } from "react-native-flash-message";
 import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Link } from 'expo-router';
 
 
 
@@ -121,7 +122,7 @@ const Item = ({ item, matricula }: ItemProps) => {
 
         }).catch(function(e){
             showMessage({
-                message: "Não foi possível copiaR código de barras.",
+                message: "Não foi possível copiar código de barras.",
                 duration: 5000,
                 type: "warning",
             });  
@@ -139,22 +140,32 @@ const Item = ({ item, matricula }: ItemProps) => {
     };
 
 return (
-    <View style={ styles.item_container }>
-        <View style={ styles.item_left }>
-            <Text style={ styles.vencimento_text }>Vencimento: {item.data}</Text>
-            <Text style={ styles.valor_text }>Valor: R$ {item.valor}</Text>
-        
-            <View style={ styles.item_btn_container }>
-                <Button type='info' text='Código de barras' fullWidth={ true } onPress={()=>getBarCode(matricula, item.idConta)} />
-                <Button type='default' text='PIX' fullWidth={ true } onPress={ ()=>console.log("TODO") } />
-            </View>
+    <>
+        <Link href={{
+            pathname:'/pdf',
+            params: { matricula: matricula, idConta: item.idConta },
+        }} asChild>               
+            <TouchableOpacity style={ styles.item_container } >
+                <View style={ styles.item_left }>
+                    <Text style={ styles.vencimento_text }>Vencimento: {item.data}</Text>
+                    <Text style={ styles.valor_text }>Valor: R$ {item.valor}</Text>
+                </View>
+                    
+                <View style={ styles.item_right } >
+                    <Ionicons name='chevron-forward' size={ 22 } color={ Colors.default }/>
+                </View>        
+                
+            </TouchableOpacity>
+        </Link>
+
+        <View style={ styles.item_btn_container }>
+            <Button type='info' text='Código de barras' fullWidth={ true } onPress={
+                ()=>getBarCode(matricula, item.idConta)}
+                />
+                {/* ()=> copyBarCodeToClipboard()} */}
+            <Button type='default' text='PIX' fullWidth={ true } onPress={ ()=>console.log("TODO") } />
         </View>
-            
-        {/* TODO - show the pdf on click here */}
-        <TouchableOpacity style={ styles.item_right } onPress={() => ""} >
-            <Ionicons name='chevron-forward' size={ 22 } color={ Colors.default }/>
-        </TouchableOpacity>        
-    </View>
+    </>
 );}
 
 const ItemSeparator = () => {
@@ -166,11 +177,11 @@ const styles = StyleSheet.create({
         // justifyContent:'',
         // alignItems:'center',
         // margin: 15,
-        backgroundColor: Colors.light_grey_bg,
+        backgroundColor: Colors.grey_bg,
         flexDirection:'column',
-        borderRadius: 6,
+        // borderRadius: 6,
         paddingTop: 30,
-        marginTop: 100,
+        marginTop: 85,
         padding: 10,
         flex: 1,
     },
@@ -184,37 +195,29 @@ const styles = StyleSheet.create({
         color: "#8898AA",
         padding: 10,
     },
-    roundIconContainer:{
-        backgroundColor: "#EA4C89",
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 5,
-        borderRadius: 20,
-        height: 40,
-        width: 40,
-    },
 
     // item
-
     item_container: {
-        // backgroundColor: Colors.success,
         flexDirection: "row", 
+        margin:10,
+        marginBottom:0,
         alignItems: "center", 
         padding: 10,
-        paddingBottom: 0,
         borderRadius: 4,
+        backgroundColor: Colors.test,
     },
     item_left: {
         flex: 4, 
-        justifyContent: "center"
+        justifyContent: "center",
     },
     item_btn_container: {
-        flexDirection: "row"
+        flexDirection: "row",
     },
     item_right: {
         flex: 1,  
         flexDirection: "row", 
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
+        // backgroundColor:Colors.error,
     },
     item_separator: {
         backgroundColor:Colors.light_grey,

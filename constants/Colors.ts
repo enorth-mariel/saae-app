@@ -28,6 +28,7 @@ export default {
   grey_txt: "#525F7F",
   medium_grey: "#8898AA",
   light_grey: "#CAD1D7",
+  test: "#e2e5e9ff",
   
   grey_bg: '#EFF1F6',
   light_grey_bg: "#F4F5F7"

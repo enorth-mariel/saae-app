@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+// import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -9,86 +9,97 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/components/useColorScheme';
 import CustomHeader from '@/src/components/Header';
 import { HeaderLeft, HeaderRight } from '@/src/components/Nav';
-import { View } from 'react-native';
+import Colors from '@/constants/Colors';
+import LoadingPage from '@/src/components/LoadingPage';
 
 export {
-  ErrorBoundary,
+  	ErrorBoundary,
 } from 'expo-router';
 
 export const unstable_settings = {
-  initialRouteName: '(tabs)',
+	initialRouteName: 'index',
+	navigationPersistenceKey: null,
 };
+
+
+
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    OpenSans: require('../assets/fonts/OpenSans-Regular.ttf'),
-    ...FontAwesome.font,
-  });
+	const [loaded, error] = useFonts({
+		OpenSans: require('../assets/fonts/OpenSans-Regular.ttf'),
+		// ...FontAwesome.font,
+	});
 
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+	useEffect(() => {
+		if (error) throw error;
+	}, [ error ]);
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+	useEffect(() => {
+		if (loaded) {
+			// SplashScreen.hideAsync();
+		}
+	}, [ loaded ]);
 
-  if (!loaded) {
-    return null;
-  }
+	if (loaded) {
+		// return <LoadingPage/>;
+	}
 
-  return <RootLayoutNav />;
+  	return <RootLayoutNav />;
 }
 
 function RootLayoutNav() {
-  // const colorScheme = useColorScheme();
+	// const colorScheme = useColorScheme();
+	// <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 
-  return (
-    // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <>
-      
-      <Stack initialRouteName='home'>
-        <Stack.Screen name="home" options={{ 
-          // headerShown: false 
-          
-          header: () => <CustomHeader/>
-          }} />
-        {/* <Stack.Screen name="modal" options={{ presentation: 'modal' }} /> */}
-        <Stack.Screen 
-          name="segunda_via"
-          // options={{
-          //   headerTransparent: true,
-          //   headerTitle: "Segunda Via 2",
-          //   headerTitleStyle: {
-          //     color: "#FFF",       // ← title text color
-          //     fontWeight: "bold",
-          //     fontFamily: "OpenSans",
-          //     fontSize: 20,
-          //   },
-          //   headerLeft: HeaderLeft,    
+	return (<>
+		<Stack initialRouteName="index">
+			<Stack.Screen name="index" options={{ 
+				header: () => <CustomHeader/>
+			}} />
+			
 
-          // }}
-  options={{
-    headerTransparent: true,
-    headerTitle: "Segunda Via",  // ← força o uso do style
-    headerTitleStyle: {
-      fontFamily: "OpenSans",
-      fontSize: 18,
-      fontWeight: 'bold',
-      color: "#FFF",
-    },
-    headerLeft: HeaderLeft,        
-  }}
-/>
-      </Stack>
-        
-      <FlashMessage position="top" />
-  </>
-     
-    // </ThemeProvider>
-  );
+			<Stack.Screen
+				name="segunda_via"     
+				options={{
+				headerStyle: {
+					backgroundColor: Colors.default,
+				},
+				headerTransparent: true,
+				headerTintColor: "#FFF",
+				headerTitle: "Segunda via",
+				headerTitleStyle: {
+					fontFamily: "OpenSans",
+					fontSize: 18,
+					fontWeight: 'bold',
+					color: "#FFF",
+				},
+				// headerLeft: HeaderLeft,        
+			}}/>
+
+			<Stack.Screen 
+			name="pdf"
+			options={{
+				headerStyle: {
+				backgroundColor: Colors.default,
+				},
+				headerTransparent: true,
+			headerTintColor: "#FFF",
+			headerTitle: "Visualizador de PDF",
+			headerTitleStyle: {
+				fontFamily: "OpenSans",
+				fontSize: 18,
+				fontWeight: 'bold',
+				color: "#FFF",
+			},
+			headerRight: HeaderRight,        
+			}}/>
+		</Stack>
+			
+		<FlashMessage position="top" />   
+	</>
+	);
 }
+
+{/* </ThemeProvider> */}
