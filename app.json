@@ -38,10 +38,15 @@
           "imageWidth": 250
         }
       ]
-      
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a99d6122-a8d5-4ff2-8a3c-140838e40898"
+      }
     }
   }
 }

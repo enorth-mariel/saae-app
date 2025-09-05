@@ -84,7 +84,7 @@ const styles= StyleSheet.create({
   container: {
     flex:1,
     padding:24,
-    marginTop: 70,
+    marginTop: 60,
     backgroundColor: Colors.default
     // Colors.light_grey
   },

@@ -1,17 +1,44 @@
-import { View, Text, Image, TouchableOpacity,StyleSheet } from 'react-native'
+import { View, Text, Image, TouchableOpacity,StyleSheet, Platform, PermissionsAndroid } from 'react-native'
 import React from 'react'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '@/src/components/Button'
 import { Link, useRouter } from 'expo-router'
+import * as Location from "expo-location";
+
 
 const index = () => {
+    const [location, setLocation] = React.useState<Location.LocationObject | null>(null);
+    const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+    const [address, setAddress] = React.useState<any>(null);
+
     const router = useRouter()
 
+    const getLocation = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        
+        if (status !== "granted") {
+            setErrorMsg("Permission to access location was denied");
+            return;
+        }
+        
+        let loc = await Location.getCurrentPositionAsync({});
+        
+        let [addr] = await Location.reverseGeocodeAsync({
+            latitude:loc.coords.latitude,
+            longitude:loc.coords.longitude,
+        });
+        
+        setAddress(addr)
+        setLocation(loc);
+        
+        goHome()
+    }
     
     const goHome = ()=>{
         router.replace('/home');
     }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.top_container}>
@@ -19,25 +46,20 @@ const index = () => {
                     source={require("../assets/images/logo_colorida.png")}/>
             </View>
 
-
-        
-
             <View style={styles.bottom_container}>
 
                     <View style={{alignItems: 'center', justifyContent:'center'}}>
-
-                        {/* <Text style={[styles.text, {fontSize: 35}]}>Bem Vindo!</Text> */}
-                        {/* 
-                        <Text style={styles.text}>SAAE há 57 anos</Text>
-                        <Text style={styles.text}>Presente no futuro da gente</Text>
-                         */}
+                        {/* <Text>
+                            {errorMsg
+                            ? errorMsg
+                            : location
+                            ? `Lat: ${location.coords.latitude}, Lng: ${location.coords.longitude} add: ${address.district}, ${address.city}, ${address.region}`
+                            : "Fetching location..."}
+                        </Text> */}
                     </View>
 
                     <View style={{height: 65, }}>
-                        {/* <Link href={'/'}> */}
-                            <Button type='primary' text='Entrar' fullWidth={true} onPress={goHome}/>
-                        {/* </Link> */}
-
+                        <Button type='primary' text='Entrar' fullWidth={true} onPress={goHome}/>
                     </View>
             </View>
 

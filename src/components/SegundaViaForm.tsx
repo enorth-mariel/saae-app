@@ -19,6 +19,7 @@ export const SegundaViaForm: React.FC = () => {
     
 
     const getContasAbertas = async () => {
+        Keyboard.dismiss()
 
         if ( matricula && is_numeric(matricula) ){
             onLoading(true)
@@ -33,7 +34,7 @@ export const SegundaViaForm: React.FC = () => {
                     setDataLoaded(true)
                     onLoading(false)
 
-                    Keyboard.dismiss()
+                    
 
                     SuccessMessage("Faturas carregadas")
                 })
@@ -102,7 +103,7 @@ const Item = ({ item, matricula }: ItemProps) => {
 
     const getBarCode = async (matricula:string, id_conta:string ) => {
         axios({
-            url: `${LOCAL_BASE_API}${SEGUNDA_VIA_BARCODE}`,
+            url: `${BASE_API}${SEGUNDA_VIA_BARCODE}`,
             method: "get",
             timeout: 5000,
             params: {
