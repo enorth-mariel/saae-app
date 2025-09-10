@@ -76,7 +76,7 @@ function RootLayoutNav() {
 					},
 					headerTransparent: true,
 					headerTintColor: "#FFF",
-					headerTitle: "Menu",
+					headerTitle: "Serviços",
 					headerTitleStyle: {
 						fontFamily: "OpenSans",
 						fontSize: 18,
