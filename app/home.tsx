@@ -1,13 +1,20 @@
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, SafeAreaView } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { Link } from 'expo-router';
 import Button from '@/src/components/Button';
 import Colors from '@/constants/Colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useSegViaStore } from '@/src/useStore';
 
 const Home = () => {  
+    const { reset_state } = useSegViaStore()
+
+    useEffect(()=>{
+        reset_state()
+    }, [])
+
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Menu</Text>

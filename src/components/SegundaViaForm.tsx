@@ -1,58 +1,32 @@
-import axios from 'axios';
 import React from 'react';
 import Button from './Button';
 import { Input } from './Input';
-import { Link } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 import Colors from '@/constants/Colors';
-import * as Clipboard from "expo-clipboard";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Text, View, Keyboard, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { BASE_API, Conta, ErrorMessage, is_numeric, LOCAL_BASE_API, SEGUNDA_VIA_BARCODE, SEGUNDA_VIA_CONTAS, SuccessMessage } from '../utils'
+import { Text, View, Keyboard, StyleSheet, FlatList, ActivityIndicator,TouchableOpacity } from 'react-native';
+import { Conta, ErrorMessage, is_numeric, RootNavigationProp, RootStackParamList, SuccessMessage } from '../utils'
+import { useSegViaStore } from '../useStore';
 
 
 
 export const SegundaViaForm: React.FC = () => {
-    const [ contas, setContas ] = React.useState<Conta[]>();
-    const [ isDataLoaded, setDataLoaded ] = React.useState(false)
-    const [ matricula, onMatriculaChange ] = React.useState<string>("") 
-    const [ loading, onLoading ] = React.useState<boolean>(false)
+    const { 
+        loading, 
+        contas, 
+        has_contas,
+        getContasAbertas,
+    } = useSegViaStore();
     
+    const [ matricula, onMatriculaChange ] = React.useState<string>("") 
 
-    const getContasAbertas = async () => {
+    const buscarFaturas = async () => {
         Keyboard.dismiss()
 
         if ( matricula && is_numeric(matricula) ){
-            onLoading(true)
-            setDataLoaded(false)
-
-            axios.get(`${BASE_API}${SEGUNDA_VIA_CONTAS}${matricula}/`)
-                .then(function(response){
-                    //TODO handle pagination
-                    let data:Conta[] = response.data.results
-
-                    setContas(data)  
-                    setDataLoaded(true)
-                    onLoading(false)
-
-                    
-
-                    SuccessMessage("Faturas carregadas")
-                })
-                .catch(function(error){
-                    setDataLoaded(false)
-                    onLoading(false)
-
-                    ErrorMessage(
-                        "Não encontrado",
-                        "Não há faturas em aberto da matrícula digitada.",
-                        "danger"
-                    )
-                })
+            await getContasAbertas(matricula)
         }
         else {
-            setDataLoaded(false)
-            onLoading(false)
-
             ErrorMessage(
                 "Matrícula não válida",
                 "Digite uma matrícula válida.",
@@ -69,7 +43,7 @@ export const SegundaViaForm: React.FC = () => {
                 <Input value={ matricula } onChangeText={onMatriculaChange} type='form' placeholder='Matricula'/>
                 
                 <View style={{ paddingHorizontal: 100 }}>
-                    <Button type='primary' text='Buscar' onPress={getContasAbertas}/>
+                    <Button type='primary' text='Buscar' onPress={buscarFaturas}/>
                 </View>
             </View>
 
@@ -80,12 +54,11 @@ export const SegundaViaForm: React.FC = () => {
                 </View>
             }
 
-            <View style={{ marginTop: 50}}>
-                {isDataLoaded && 
-                    <FlatList 
-                        data={ contas } 
-                        ItemSeparatorComponent={ItemSeparator} 
-                        renderItem={( { item } ) => <Item item={ item } matricula={ matricula }></Item> }/>
+            <View style={{ marginTop: 50}}>{has_contas && 
+                <FlatList 
+                    data={ contas } 
+                    ItemSeparatorComponent={ItemSeparator} 
+                    renderItem={( { item } ) => <Item item={ item } matricula={ matricula }></Item> }/>
                 }
             </View>
         </View>
@@ -94,79 +67,43 @@ export const SegundaViaForm: React.FC = () => {
 
 
 type ItemProps = {
-  item: Conta;
-  matricula: string;
+    item: Conta;
+    matricula: string;
 }
 
 const Item = ({ item, matricula }: ItemProps) => {
-    const [ barCode, setBarCode ] = React.useState("")
+    const navigation = useNavigation<RootNavigationProp>()
+    const { getBarCode, setFaturaAtual } = useSegViaStore();
 
-    const getBarCode = async (matricula:string, id_conta:string ) => {
-        axios({
-            url: `${BASE_API}${SEGUNDA_VIA_BARCODE}`,
-            method: "get",
-            timeout: 5000,
-            params: {
-                matricula: matricula,
-                id_conta: id_conta
-            }
-        })
-        .then(function(response){
-            setBarCode(response.data.data)
-            copyBarCodeToClipboard()
-
-        }).catch(function(error){
-            if (error.response) {
-                ErrorMessage(
-                    "Não foi possível copiar código de barras.",
-                    `Erro ${error.response.status}`,
-                    "danger"
-                )
-            } else if (error.request) {
-                ErrorMessage(
-                    "Não foi possível copiar código de barras.",
-                    `Nenhuma resposta: ${error.request}`,
-                    "danger"
-                )
-            } else {
-                ErrorMessage(
-                    "Não foi possível copiar código de barras.",
-                    `${error.message}`,
-                    "danger"
-                )
-            }
-        })
+    const copiarBarCode = async (matricula:string, id_conta:string ) => {
+        await getBarCode(matricula, id_conta)
     }
 
-    const copyBarCodeToClipboard = async () => {
-        await Clipboard.setStringAsync(barCode); 
-    };
-
+    const vizualizarPdf = (id_conta:string) => {
+        setFaturaAtual(id_conta)
+        navigation.navigate("pdf")
+    }
+    
 return (
     <>
+        <View style={ styles.item_container } >
+            <View style={ styles.item_left }>
+                <Text style={ styles.vencimento_text }>Vencimento: {item.data}</Text>
+                <Text style={ styles.valor_text }>Valor: R$ {item.valor}</Text>
+            </View>
+        </View>
+                
         <Link href={{
             pathname:'/pdf',
-            params: { matricula: matricula, idConta: item.idConta },
-        }} asChild>               
-            <TouchableOpacity style={ styles.item_container } >
-                <View style={ styles.item_left }>
-                    <Text style={ styles.vencimento_text }>Vencimento: {item.data}</Text>
-                    <Text style={ styles.valor_text }>Valor: R$ {item.valor}</Text>
-                </View>
-                    
-                <View style={ styles.item_right } >
-                    <Ionicons name='chevron-forward' size={ 22 } color={ Colors.default }/>
-                </View>        
-                
-            </TouchableOpacity>
-        </Link>
+        }} asChild>       
+          {/* <TouchableOpacity> */}
+            <Button type='default' text='visualizar PDF' onPress={()=>vizualizarPdf(item.idConta)} />
+        {/* </TouchableOpacity>         */}
+        </Link>     
 
         <View style={ styles.item_btn_container }>
             <Button type='info' text='Código de barras' fullWidth={ true } onPress={
-                ()=>getBarCode(matricula, item.idConta)}/>
-
-                {/* ()=> copyBarCodeToClipboard()} */}
-            <Button type='default' text='PIX' fullWidth={ true } onPress={ ()=>ErrorMessage("Não implementado", "", 'danger') } />
+                ()=>copiarBarCode(matricula, item.idConta)}/>
         </View>
     </>
 );}
@@ -215,7 +152,6 @@ const styles = StyleSheet.create({
         flex: 1,  
         flexDirection: "row", 
         justifyContent: "flex-end",
-        // backgroundColor:Colors.error,
     },
     item_separator: {
         backgroundColor:Colors.light_grey,

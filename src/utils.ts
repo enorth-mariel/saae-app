@@ -15,6 +15,14 @@ export interface Conta {
     idConta: string
 }
 
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+export type RootNavigationProp = NativeStackNavigationProp<RootStackParamList, "pdf">;
+
+export type RootStackParamList = {
+  home: undefined;
+  pdf: undefined;
+};
+
 export function is_numeric(str:string){
     return /^\d+$/.test(str);
 }
@@ -23,6 +31,7 @@ export const SuccessMessage = (message:string) => {
     showMessage({
         message: message,
         type: "default", 
+        duration: 5000,
         backgroundColor: "#4CAF50",
         color: "#fff", 
         floating: true, 

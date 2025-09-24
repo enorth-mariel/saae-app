@@ -7,11 +7,12 @@ import 'react-native-reanimated';
   import FlashMessage from "react-native-flash-message";
 // import { useColorScheme } from '@/components/useColorScheme';
 import CustomHeader from '@/src/components/Header';
-import { HeaderRight } from '@/src/components/Nav';
+import { HeaderRightDownloadBtn } from '@/src/components/Nav';
 import Colors from '@/constants/Colors';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { NativeStackHeaderRightProps } from "@react-navigation/native-stack";
 
 export {
   	ErrorBoundary,
@@ -76,7 +77,7 @@ function RootLayoutNav() {
 					},
 					headerTransparent: true,
 					headerTintColor: "#FFF",
-					headerTitle: "Serviços",
+					headerTitle: "Contato",
 					headerTitleStyle: {
 						fontFamily: "OpenSans",
 						fontSize: 18,
@@ -128,7 +129,7 @@ function RootLayoutNav() {
 				fontWeight: 'bold',
 				color: "#FFF",
 			},
-			headerRight: HeaderRight,        
+			headerRight: () => <HeaderRightDownloadBtn/>        
 			}}/>
 
 
