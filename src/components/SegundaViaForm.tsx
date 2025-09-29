@@ -1,65 +1,85 @@
 import React from 'react';
 import Button from './Button';
-import { Input } from './Input';
-import { Link, useNavigation } from 'expo-router';
 import Colors from '@/constants/Colors';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { Text, View, Keyboard, StyleSheet, FlatList, ActivityIndicator,TouchableOpacity } from 'react-native';
-import { Conta, ErrorMessage, is_numeric, RootNavigationProp, RootStackParamList, SuccessMessage } from '../utils'
-import { useSegViaStore } from '../useStore';
-
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useNavigation } from 'expo-router';
+import { useGeolocationStore, usePaginationStore, useSegViaStore } from '../useStore';
+import { BAR_CODE, Conta, ErrorMessage, is_numeric, PIX_CODE, RootNavigationProp } from '../utils'
+import { Text, View, Keyboard, StyleSheet, FlatList, ActivityIndicator,TouchableOpacity, TextInput } from 'react-native';
 
 
 export const SegundaViaForm: React.FC = () => {
-    const { 
-        loading, 
-        contas, 
-        has_contas,
-        getContasAbertas,
-    } = useSegViaStore();
+	const { resetPaginationStore, SegundaViaNextPage, loading_next,	loading, count, data } = usePaginationStore()
+    const { resetMatriculaAtual } = useSegViaStore();
     
-    const [ matricula, onMatriculaChange ] = React.useState<string>("") 
+	const [ matricula, onMatriculaChange ] = React.useState<string>("") 
+
+
 
     const buscarFaturas = async () => {
-        Keyboard.dismiss()
-
+		Keyboard.dismiss()
+		resetPaginationStore()
+		
         if ( matricula && is_numeric(matricula) ){
-            await getContasAbertas(matricula)
+          	await SegundaViaNextPage(matricula)
         }
         else {
-            ErrorMessage(
-                "Matrícula não válida",
-                "Digite uma matrícula válida.",
-                "warning"
-            )
+			resetMatriculaAtual()
+            ErrorMessage("Matrícula não válida", "Digite uma matrícula válida.", "warning")
         }        
     };
 
     return (
         <View style={ styles.container }>
-            <View>
-                <Text style={ styles.header_text }>Digite o Nº da matrícula</Text>
+            <View style={{paddingHorizontal:10}}>
+                <Text style={ styles.header_text }>Digite sua matrícula</Text>
 
-                <Input value={ matricula } onChangeText={onMatriculaChange} type='form' placeholder='Matricula'/>
-                
+                <View style={styles.inputContainer}>
+                    <FontAwesome6 name="magnifying-glass" size={18} color={"#000"} style={styles.icon} />
+                        <TextInput
+                            placeholder={"Pesquisar"}
+                            placeholderTextColor={Colors.medium_grey}
+                            style={styles.input}
+                            onChangeText={onMatriculaChange}
+                            value={matricula}
+                        />
+                </View>
+
                 <View style={{ paddingHorizontal: 100 }}>
                     <Button type='primary' text='Buscar' onPress={buscarFaturas}/>
                 </View>
             </View>
 
-            {
-                loading &&
+            {loading &&
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <ActivityIndicator size="large" color="#007AFF" />
                 </View>
             }
 
-            <View style={{ marginTop: 50}}>{has_contas && 
-                <FlatList 
-                    data={ contas } 
-                    ItemSeparatorComponent={ItemSeparator} 
-                    renderItem={( { item } ) => <Item item={ item } matricula={ matricula }></Item> }/>
-                }
+            <View style={{ marginTop: 50, marginBottom: 50,}}>
+				{ data.length > 0 && 
+					<>
+						<View style={styles.summaryContainer}>
+							{ data.length == 1 
+								? 
+								<Text style={styles.summaryText}>{count} conta em aberto</Text>
+								:
+								<Text style={styles.summaryText}>{count} contas em aberto</Text>
+							}
+						</View>
+					
+						<ItemSeparator></ItemSeparator>
+
+						<FlatList 
+							data={ data } 
+							ItemSeparatorComponent={ItemSeparator} 
+							contentContainerStyle={{ paddingBottom: 180 }}
+							onEndReached={()=>SegundaViaNextPage(matricula)}
+							ListFooterComponent={loading_next ? <ActivityIndicator size="large" /> : null}
+							renderItem={( { item } ) => <Item item={ item } matricula={ matricula }></Item> }/>
+					</> 
+				}
             </View>
         </View>
     )
@@ -73,10 +93,13 @@ type ItemProps = {
 
 const Item = ({ item, matricula }: ItemProps) => {
     const navigation = useNavigation<RootNavigationProp>()
-    const { getBarCode, setFaturaAtual } = useSegViaStore();
+    const { getFaturaCode, setFaturaAtual } = useSegViaStore();
+    const { address } = useGeolocationStore()
 
-    const copiarBarCode = async (matricula:string, id_conta:string ) => {
-        await getBarCode(matricula, id_conta)
+    const copiarCode = async (matricula:string, id_conta:string, tipo:1 | 2 ) => {
+		console.log("copiando codigo de barras")
+		console.log(address)
+        await getFaturaCode(matricula, id_conta, address, tipo)
     }
 
     const vizualizarPdf = (id_conta:string) => {
@@ -84,53 +107,142 @@ const Item = ({ item, matricula }: ItemProps) => {
         navigation.navigate("pdf")
     }
     
-return (
-    <>
-        <View style={ styles.item_container } >
-            <View style={ styles.item_left }>
-                <Text style={ styles.vencimento_text }>Vencimento: {item.data}</Text>
-                <Text style={ styles.valor_text }>Valor: R$ {item.valor}</Text>
-            </View>
-        </View>
-                
-        <Link href={{
-            pathname:'/pdf',
-        }} asChild>       
-          {/* <TouchableOpacity> */}
-            <Button type='default' text='visualizar PDF' onPress={()=>vizualizarPdf(item.idConta)} />
-        {/* </TouchableOpacity>         */}
-        </Link>     
+	return (
+		<View style={styles.card}>
+			<View style={styles.itemInfoRow}>
+				<View style={styles.itemInfoLeft}>
+					<Text style={styles.valor}>R$ {item.valor}</Text>
+				</View>
+				
+				<View style={styles.itemInfoRight}>
+					<Text style={styles.vencimento}>Vencimento: {item.data}</Text>
+				</View>
+			</View>
+		
+			<View style={{ flexDirection: "row", justifyContent: "space-around", paddingHorizontal: 20 }}>
+				<TouchableOpacity  onPress={()=>copiarCode(matricula, item.idConta, PIX_CODE)} style={{paddingHorizontal:15, paddingVertical:0, borderRadius: 10, display: 'flex', flexDirection: 'row',justifyContent: 'center', alignItems: "center", backgroundColor: Colors.light_grey_bg }}>
+					<FontAwesome6 name="pix" size={20} color="black" />
+					<Text style={{ marginLeft: 5}}>Pix</Text>
+				</TouchableOpacity>
 
-        <View style={ styles.item_btn_container }>
-            <Button type='info' text='Código de barras' fullWidth={ true } onPress={
-                ()=>copiarBarCode(matricula, item.idConta)}/>
-        </View>
-    </>
-);}
+				<TouchableOpacity onPress={()=>copiarCode(matricula, item.idConta, BAR_CODE)} style={{paddingHorizontal:15, paddingVertical:10, borderRadius: 10, display: 'flex', flexDirection: 'row',justifyContent: 'center', alignItems: "center", backgroundColor: Colors.light_grey_bg }}>
+					<MaterialCommunityIcons name="barcode-scan" size={20} color="black" />
+					<Text style={{ marginLeft: 5 }}>Boleto</Text>
+				</TouchableOpacity>
+
+				<TouchableOpacity onPress={()=>vizualizarPdf(item.idConta)} style={{paddingHorizontal:15, paddingVertical:10, borderRadius: 10, display: 'flex', flexDirection: 'row',justifyContent: 'center', alignItems: "center", backgroundColor: Colors.light_grey_bg }}>
+					<FontAwesome6 name="file-pdf" size={20} color="black" />
+					<Text style={{ marginLeft: 5 }}>PDF</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
+	)
+}
 
 const ItemSeparator = () => {
     return <View style={ styles.item_separator } />;
 };
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: Colors.grey_bg,
+    summaryContainer: {
+		display:'flex',
+		alignItems: 'flex-end'   ,
+		paddingHorizontal: 20,
+		borderRadius: 8,
+		marginBottom: 5,
+	},
+	summaryText: {
+		fontSize: 16,
+		color: "#374151",
+		marginBottom: 4,
+	},
+    card: {
+		paddingVertical: 16,
+		paddingHorizontal: 25,
+	},
+	itemInfo: {
+		marginBottom: 16,
+	},
+	vencimento: {
+		fontSize: 13,
+		color: "#6b7280",
+		marginBottom: 4,
+	},
+	valor: {
+		fontSize: 20,
+		fontWeight: "600",
+		color: "#111827",
+	},
+	actions: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	actionBtn: {
+		alignItems: "center",
+		flex: 1,
+	},
+	actionText: {
+		marginTop: 6,
+		fontSize: 12,
+		color: "#374151", 
+	},
+	referencia: {
+		fontSize: 12,
+		color: "#6b7280",
+		marginTop: 2,
+	},
+	itemInfoRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginBottom: 16,
+	},
+	itemInfoLeft: {
+		flex: 1,
+	},
+	itemInfoRight: {
+		flex: 1,
+		alignItems: "flex-end",
+	},
+  	inputContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: Colors.medium_grey,
+		borderRadius: 18,
+		paddingHorizontal: 12,
+		margin: 10,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		backgroundColor: "#fff",
+	},
+	icon: {
+		marginRight: 8,
+	},
+	input: {
+		flex: 1,
+		paddingVertical: 8,
+		fontFamily: "OpenSans",
+		fontSize: 16,
+	},
+    container: {    
+        backgroundColor: "#fff",
         flexDirection:'column',
         paddingTop: 30,
         marginTop: 85,
-        padding: 10,
         flex: 1,
     },
     textContainer: {
         alignItems: "center",
     },
     header_text: {
+        alignSelf:'center',
         textTransform: 'uppercase',
         fontFamily: "OpenSans",
         color: "#8898AA",
         padding: 10,
     },
-
     // item
     item_container: {
         flexDirection: "row", 
@@ -154,8 +266,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
     },
     item_separator: {
-        backgroundColor:Colors.light_grey,
-        marginVertical: 1, 
+        backgroundColor:'#d1d2d6ff',
+        marginHorizontal:20,
         height: 1
     },
     vencimento_text: {

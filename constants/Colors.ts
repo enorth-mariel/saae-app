@@ -26,11 +26,11 @@ export default {
   dark_txt: "#212529",
   white_txt: "#FFFF",
   grey_txt: "#525F7F",
-  medium_grey: "#8898AA",
+  medium_grey: "#9ca4acff",
   light_grey: "#CAD1D7",
   test: "#e2e5e9ff",
   
   grey_bg: '#EFF1F6',
-  light_grey_bg: "#F4F5F7"
+  light_grey_bg: "#ebebecff"
   // "#1A2980", "#3A7BD5", "#00C6FB" 
 };

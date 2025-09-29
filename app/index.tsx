@@ -1,38 +1,28 @@
 import { View, Text, Image, TouchableOpacity,StyleSheet, Platform, PermissionsAndroid } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from '@/src/components/Button'
 import { Link, useRouter } from 'expo-router'
 import * as Location from "expo-location";
+import { useGeolocationStore } from '@/src/useStore'
 
 
 const index = () => {
     const [location, setLocation] = React.useState<Location.LocationObject | null>(null);
+    const [grantedLocation, setPerms ] = React.useState<Boolean>(false)
     const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
     const [address, setAddress] = React.useState<any>(null);
+    const { requestLocationPerms, locationPermsGranted, getCurrentLocation } = useGeolocationStore()
 
     const router = useRouter()
 
+    useEffect(()=>{
+        getLocation()
+    }, [])
+
     const getLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        
-        if (status !== "granted") {
-            setErrorMsg("Permission to access location was denied");
-            return;
-        }
-        
-        let loc = await Location.getCurrentPositionAsync({});
-        
-        let [addr] = await Location.reverseGeocodeAsync({
-            latitude:loc.coords.latitude,
-            longitude:loc.coords.longitude,
-        });
-        
-        setAddress(addr)
-        setLocation(loc);
-        
-        goHome()
+        await requestLocationPerms()
     }
     
     const goHome = ()=>{
@@ -49,18 +39,21 @@ const index = () => {
             <View style={styles.bottom_container}>
 
                     <View style={{alignItems: 'center', justifyContent:'center'}}>
-                        {/* <Text>
-                            {errorMsg
-                            ? errorMsg
-                            : location
-                            ? `Lat: ${location.coords.latitude}, Lng: ${location.coords.longitude} add: ${address.district}, ${address.city}, ${address.region}`
-                            : "Fetching location..."}
-                        </Text> */}
+                        
                     </View>
 
-                    <View style={{height: 65, }}>
-                        <Button type='primary' text='Entrar' fullWidth={true} onPress={goHome}/>
-                    </View>
+                    { locationPermsGranted && 
+                        <View style={{height: 65, }}>
+                            <Button type='primary' text='Entrar' fullWidth={true} onPress={goHome}/>
+                        </View>
+                    }
+
+                    { !locationPermsGranted && 
+                        <Text>É necessário permitir localização</Text>
+                    }
+
+
+
             </View>
 
     </SafeAreaView>

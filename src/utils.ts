@@ -3,6 +3,7 @@ import { showMessage } from "react-native-flash-message";
 import { ReactElement } from "react";
 
 export const BASE_API = "https://saae-back.e-north.com.br/api/"
+// "http:10.0.2.2:8080/api/"
 export const BASE_PROXY = "https://saae.e-north.com.br/gsan/"
 export const LOCAL_BASE_API = "http://10.0.2.2:8080/api/"
 
@@ -15,12 +16,19 @@ export interface Conta {
     idConta: string
 }
 
+export const PIX_CODE = 1
+export const BAR_CODE = 2
+
+export type T_PIX_CODE = 1
+export type T_BAR_CODE = 2
+
+
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 export type RootNavigationProp = NativeStackNavigationProp<RootStackParamList, "pdf">;
 
 export type RootStackParamList = {
-  home: undefined;
-  pdf: undefined;
+    home: undefined;
+    pdf: undefined;
 };
 
 export function is_numeric(str:string){
@@ -74,11 +82,20 @@ export const ErrorMessage = (message:string, description:string, type:"warning" 
     });
 }
 
-import {AntDesign} from '@expo/vector-icons';
-
 export interface Menu {
   title: string;
   link?: string;
   icon: ReactElement 
 }
 
+export interface Address {
+    cidade: string, 
+    pais: string, 
+    pais_codigo: string,
+    rua: string ,
+    bairro: string, 
+    estado: string, 
+    cep: string,
+    lat: string,
+    long: string
+}

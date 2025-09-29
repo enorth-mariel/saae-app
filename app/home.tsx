@@ -6,35 +6,66 @@ import { Link } from 'expo-router';
 import Button from '@/src/components/Button';
 import Colors from '@/constants/Colors';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useSegViaStore } from '@/src/useStore';
+import { useGeolocationStore, useInternetAccess, useSegViaStore } from '@/src/useStore';
 
 const Home = () => {  
     const { reset_state } = useSegViaStore()
+    const { checkInternetAccess, hasInternetAccess } = useInternetAccess()
+    const { address, locationPermsGranted, getCurrentLocation } = useGeolocationStore()
 
-    useEffect(()=>{
-        reset_state()
+
+    useEffect(()=>{ 
+        const run = async () => {
+            try {                
+                if (locationPermsGranted) {
+                    await getCurrentLocation();
+                }
+                reset_state()
+            } catch (error) {
+                console.error("Home useEffect error:", error);
+            }
+        }
+        run()
     }, [])
-
+    
+    // const interval = setInterval(() => {
+    //     checkInternetAccess();
+    // }, 5000); 
+    // return () => clearInterval(interval);
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Menu</Text>
+            {hasInternetAccess && <>
+            
+                <Text style={styles.text}>Menu</Text>
 
                 <Link href={'/segunda_via'} asChild>
-            <TouchableOpacity>
+                <TouchableOpacity>
 
 
-                <ImageBackground style={styles.button} 
-                source={require("../assets/images/bg1.jpg")} 
-                resizeMode="cover"
-                imageStyle={{ borderRadius: 12 }}>
+                    <ImageBackground style={styles.button} 
+                    source={require("../assets/images/bg1.jpg")} 
+                    resizeMode="cover"
+                    imageStyle={{ borderRadius: 12 }}>
 
-                        <View style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>      
-                            <MaterialCommunityIcons name="file-document" size={25} color={Colors.white_txt} style={{padding:5}}/>
-                            <Text style={styles.buttonText}>Segunda Via</Text>
-                        </View>
-                </ImageBackground>
-                </TouchableOpacity>
-            </Link>          
+                            <View style={{flex: 1,flexDirection:'row', alignItems: 'center'}}>      
+                                <MaterialCommunityIcons name="file-document" size={25} color={Colors.white_txt} style={{padding:5}}/>
+                                <Text style={styles.buttonText}>Segunda Via</Text>
+                            </View>
+                    </ImageBackground>
+                    </TouchableOpacity>
+                </Link>     
+
+                { address && <>
+                
+                
+                <Text>Latitude: {address.lat}</Text>
+                <Text>Longitude: {address.long}</Text> 
+                </> 
+                }
+            </>}   
+
+            {!hasInternetAccess && <Text style={{color:Colors.error}}>
+                Please connect to the internet</Text>}  
         </View>
     )
 }
