@@ -55,13 +55,6 @@ const Home = () => {
                     </TouchableOpacity>
                 </Link>     
 
-                { address && <>
-                
-                
-                <Text>Latitude: {address.lat}</Text>
-                <Text>Longitude: {address.long}</Text> 
-                </> 
-                }
             </>}   
 
             {!hasInternetAccess && <Text style={{color:Colors.error}}>

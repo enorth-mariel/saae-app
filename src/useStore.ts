@@ -157,7 +157,7 @@ export const usePaginationStore = create<PaginationStore>((set, get) => ({
 
         // First request
         if(data.length === 0) {
-            url = `http://10.0.2.2:8080/api/${SEGUNDA_VIA_CONTAS}${matricula}/`;
+            url = `${BASE_API}${SEGUNDA_VIA_CONTAS}${matricula}/`;
             set({ loading: true });
         } 
         else if(!nextPage || loading) {
@@ -268,7 +268,7 @@ export const useSegViaStore = create<SegundaViaState>((set) => ({
         set({barcode: null, pix:null})
         
         axios({
-            url: `http://10.0.2.2:8080/api/${SEGUNDA_VIA_BARCODE}`,
+            url: `${BASE_API}${SEGUNDA_VIA_BARCODE}`,
             method: "get",
             timeout: 5000,
             params: {
