@@ -1,10 +1,10 @@
+import 'react-native-reanimated';
 // import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import 'react-native-reanimated';
-  import FlashMessage from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message";
 // import { useColorScheme } from '@/components/useColorScheme';
 import CustomHeader from '@/src/components/Header';
 import { HeaderRightDownloadBtn } from '@/src/components/Nav';

@@ -1,3 +1,4 @@
+import 'react-native-reanimated';
 import { View, Text, Image, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import Colors from '@/constants/Colors'
