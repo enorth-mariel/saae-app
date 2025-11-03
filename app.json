@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#232323"
+        "backgroundColor": "#f7f7f7"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.anonymous.saae_mobile"

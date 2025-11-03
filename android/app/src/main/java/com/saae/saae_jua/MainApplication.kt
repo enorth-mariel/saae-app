@@ -1,4 +1,4 @@
-package com.anonymous.saae_mobile
+package com.saae.saae_jua
 
 import android.app.Application
 import android.content.res.Configuration
